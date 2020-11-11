@@ -95,6 +95,7 @@
                         link.download = 'profile_pic.png';
                         link.href = canvas.toDataURL()
                         link.click();
+                        az.remove_element("instruct", 1)
                         az.add_text("hold_button", 1, {
                             "this_class" : "instruct",
                             "text" : "Crop as needed."
