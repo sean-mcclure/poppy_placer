@@ -1,7 +1,7 @@
 {
   "name": "poppy",
   "version": "0.1.0",
-  "homepage" : "https://collaboratescience.com/poppy/",
+  "homepage" : "https://collaboratescience.com",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
