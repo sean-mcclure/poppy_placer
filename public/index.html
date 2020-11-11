@@ -2,6 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+
+    <script src="https://azlejs.com/v2/azle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.7/dist/html2canvas.min.js"></script>
+
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
@@ -10,34 +14,154 @@
       content="Web site created using create-react-app"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    <title>Poppy Placer</title>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
+  <script>
+
+
+  
+  setTimeout(function() {
+    az.load_font("Ubuntu")
+    az.add_upload_button("hold_button", 1, {
+        "this_class": "my_upload"
+    })
+    az.style_button("my_upload", 1, {
+        "display": "none"
+    })
+    az.add_event("my_upload", 1, {
+        "type": "upload",
+        "function": function(data) {
+            az.remove_element("user_image", 1)
+            az.add_image("hold_img", 1, {
+                "this_class": "user_image",
+                "image_data": data
+            })
+            az.style_image("user_image", 1, {
+                "align": "center"
+            })
+            az.add_image("hold_img_inner", 1, {
+                "this_class": "poppy_image",
+                "image_path": "poppy.png"
+            })
+            az.style_image("poppy_image", 1, {
+                "align": "center",
+                "width": "40px",
+                "position": "absolute",
+                "margin-left": "50px",
+                "margin-top": "150px"
+            })
+            az.remove_element("my_button", 1)
+            az.add_button("hold_button", 1, {
+                "this_class": "download_button",
+                "text": "DOWNLOAD"
+            })
+            az.style_button("download_button", 1, {
+                "background": "#706fd3",
+                "color": "white",
+                "align" : "center",
+                "margin-top" : "10px"
+            })
+            az.add_slider("hold_button", 1, {
+                "this_class" : "slider",
+                "min_value" : -100,
+                "max_value" : 60,
+                "default_value" : 50,
+                "text_class" : "slider_text",
+            })
+            az.style_text("slider_text", 1, {
+                "color" : "transparent"
+            })
+            az.style_slider("slider", 1, {
+                "align" : "center",
+                "margin-top" : "10px"
+            })
+            az.add_event("slider", 1, {
+                "type" : "as_change",
+                "function" : function(this_id) {
+                    az.style_image("poppy_image", 1, {
+                        "margin-left" : $("#" + this_id).val().toString() + "px"
+                    })
+                }
+            })
+            az.add_event("download_button", 1, {
+                "type": "click",
+                "function": function() {
+                    html2canvas(document.querySelector("#hold_img")).then(canvas => {
+                        var link = document.createElement('a');
+                        link.download = 'profile_pic.png';
+                        link.href = canvas.toDataURL()
+                        link.click();
+                        az.add_text("hold_button", 1, {
+                            "this_class" : "instruct",
+                            "text" : "Crop as needed."
+                        })
+                        az.style_text("instruct", 1, {
+                            "align" : "center",
+                            "font-size" : "20px",
+                            "font-family" : "Ubuntu",
+                            "margin-top" : "10px"
+                        })
+                    });
+                }
+            })
+        }
+    })
+    az.add_button("hold_button", 1, {
+        "this_class": "my_button",
+        "text": "UPLOAD PROFILE PIC"
+    })
+    az.style_button("my_button", 1, {
+        "background": "#eb4d4b",
+        "margin-bottom": "10px",
+        "margin-top": "10px",
+        "border": "0px solid black",
+        "align": "center_screen",
+        "outline": 0
+    })
+    az.add_event("my_button", 1, {
+        "type": "click",
+        "function": function() {
+            az.click_element("my_upload", 1)
+        }
+    })
+}, 1000)
+
+
+function cropImageFromCanvas(ctx) {
+  var canvas = ctx.canvas, 
+    w = canvas.width, h = canvas.height,
+    pix = {x:[], y:[]},
+    imageData = ctx.getImageData(0,0,canvas.width,canvas.height),
+    x, y, index;
+
+  for (y = 0; y < h; y++) {
+    for (x = 0; x < w; x++) {
+      index = (y * w + x) * 4;
+      if (imageData.data[index+3] > 0) {
+        pix.x.push(x);
+        pix.y.push(y);
+      } 
+    }
+  }
+  pix.x.sort(function(a,b){return a-b});
+  pix.y.sort(function(a,b){return a-b});
+  var n = pix.x.length-1;
+
+  w = 1 + pix.x[n] - pix.x[0];
+  h = 1 + pix.y[n] - pix.y[0];
+  var cut = ctx.getImageData(pix.x[0], pix.y[0], w, h);
+
+  canvas.width = w;
+  canvas.height = h;
+  ctx.putImageData(cut, 0, 0);
+
+  var image = canvas.toDataURL();  //open cropped image in a new window
+  return(canvas)
+}
+
+  </script>
 </html>
