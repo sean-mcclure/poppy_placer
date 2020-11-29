@@ -41,7 +41,13 @@
                 "image_data": data
             })
             az.style_image("user_image", 1, {
-                "align": "center"
+                "align": "center",
+                "width" : "200px",
+                "height" : "266.656px",
+                "min-width" : "200px",
+                "max-width" : "200px",
+                "max-height" : "266.656px",
+                "min-height" : "266.656px",
             })
             az.add_image("hold_img_inner", 1, {
                 "this_class": "poppy_image",
@@ -55,15 +61,35 @@
                 "margin-top": "150px"
             })
             az.remove_element("my_button", 1)
-            az.add_button("hold_button", 1, {
+            az.add_layout("hold_button", 1, {
+                "this_class" : "button_layout",
+                "row_class" : "button_layout_rows",
+                "cell_class" : "button_layout_cells",
+                "number_of_rows": 1,
+                "number_of_columns": 2
+            })
+            az.style_layout("button_layout", 1, {
+                "height" : "auto",
+                "width" : "auto",
+                "align" : "center",
+                "margin-top" : "10px",
+                "border" : 0
+            })
+            az.add_button("button_layout_cells", 1, {
                 "this_class": "download_button",
                 "text": "DOWNLOAD"
             })
             az.style_button("download_button", 1, {
                 "background": "#706fd3",
-                "color": "white",
-                "align" : "center",
-                "margin-top" : "10px"
+                "color": "white"
+            })
+            az.add_button("button_layout_cells", 2, {
+                "this_class": "new_button",
+                "text": "NEW"
+            })
+            az.style_button("new_button", 1, {
+                "background": "#33d9b2",
+                "color": "white"
             })
             az.add_slider("hold_button", 1, {
                 "this_class" : "slider",
@@ -72,10 +98,15 @@
                 "default_value" : 50,
                 "text_class" : "slider_text",
             })
-            az.style_text("slider_text", 1, {
-                "color" : "transparent"
+            az.add_slider("hold_button", 1, {
+                "this_class" : "slider",
+                "min_value" : 0,
+                "max_value" : 230,
+                "default_value" : 150,
+                "text_class" : "slider_text",
             })
-            az.style_slider("slider", 1, {
+            $(".slider_text").css("display", "none")
+            az.all_style_slider("slider", {
                 "align" : "center",
                 "margin-top" : "10px"
             })
@@ -84,6 +115,14 @@
                 "function" : function(this_id) {
                     az.style_image("poppy_image", 1, {
                         "margin-left" : $("#" + this_id).val().toString() + "px"
+                    })
+                }
+            })
+            az.add_event("slider", 2, {
+                "type" : "as_change",
+                "function" : function(this_id) {
+                    az.style_image("poppy_image", 1, {
+                        "margin-top" : $("#" + this_id).val().toString() + "px"
                     })
                 }
             })
@@ -109,6 +148,12 @@
                     });
                 }
             })
+            az.add_event("new_button", 1, {
+                "type": "click",
+                "function": function() {
+                        location.reload() 
+                }
+            })
         }
     })
     az.add_button("hold_button", 1, {
@@ -129,6 +174,14 @@
         "function": function() {
             az.click_element("my_upload", 1)
         }
+    })
+    az.add_text("hold_button", 1, {
+        "this_class" : "explain",
+        "text" : "dimensions expected to be iOS photo upload size"
+    })
+    az.style_text("explain", 1, {
+        "align": "center",
+        "margin" : "0 auto"
     })
 }, 1000)
 
