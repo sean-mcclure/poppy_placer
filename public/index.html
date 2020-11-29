@@ -36,6 +36,7 @@
         "type": "upload",
         "function": function(data) {
             az.remove_element("user_image", 1)
+            az.remove_element("explain", 1)
             az.add_image("hold_img", 1, {
                 "this_class": "user_image",
                 "image_data": data
